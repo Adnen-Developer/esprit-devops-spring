@@ -25,7 +25,7 @@ public class DetailFacture implements Serializable {
 	private Integer qteCommandee;
 	private float prixTotalDetail;
 	private Integer pourcentageRemise;
-	private float montantRemise;
+	private float        montantRemise;
 	@ManyToOne
 	private Produit       produit;
 	@ManyToOne
