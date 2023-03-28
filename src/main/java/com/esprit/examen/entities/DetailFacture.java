@@ -23,7 +23,7 @@ public class DetailFacture implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idDetailFacture;
 	private Integer qteCommandee;
-	private float prixTotalDetail;
+	private float        prixTotalDetail;
 	private Integer      pourcentageRemise;
 	private float        montantRemise;
 	@ManyToOne
