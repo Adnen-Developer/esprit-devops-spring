@@ -1,6 +1,5 @@
 # Use the official Maven image as the base image
-FROM maven:3.8.3-jdk-8 AS build
-
+FROM maven:3.8.3-ibmjava-8-alpine AS build
 # Copy the application code to the container
 COPY . /app
 
@@ -11,7 +10,7 @@ WORKDIR /app
 RUN mvn clean package -DskipTests
 
 # Use a Java runtime as the base image
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre-alpine AS base
 
 # Set the working directory in the container
 WORKDIR /app
