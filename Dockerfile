@@ -17,7 +17,7 @@ FROM openjdk:8-jre-alpine
 WORKDIR /app
 
 # Copy the packaged jar file to the container
-COPY /app/target/tpAchatProject-1.0.jar .
+COPY target/tpAchatProject-1.0.jar .
 
 # Expose port 8089 for the application
 EXPOSE 8089
