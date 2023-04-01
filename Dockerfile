@@ -1,5 +1,6 @@
 # Use the official Maven image as the base image
-FROM maven:3.8.3-ibmjava-8-alpine
+FROM maven:3.8.3-jdk-8
+
 # Copy the application code to the container
 COPY . /app
 
@@ -16,9 +17,10 @@ FROM openjdk:8-jre-alpine
 WORKDIR /app
 
 # Copy the packaged jar file to the container
-COPY --from=build /app/target/tpAchatProject-1.0.jar .
+COPY /app/target/tpAchatProject-1.0.jar .
 
 # Expose port 8089 for the application
 EXPOSE 8089
+
 # Set the command to run when the container starts
 CMD ["java", "-jar", "tpAchatProject-1.0.jar"]
