@@ -24,3 +24,8 @@ EXPOSE 8089
 
 # Set the command to run when the container starts
 CMD ["java", "-jar", "tpAchatProject-1.0.jar"]
+
+
+# Set the image build version
+ARG BUILD_VERSION
+ENV BUILD_VERSION ${BUILD_VERSION:-unknown}
