@@ -23,4 +23,5 @@ COPY target/tpAchatProject-1.0.jar .
 EXPOSE 8089
 
 # Set the command to run when the container starts
-CMD ["java", "-jar", "tpAchatProject-1.0.jar"]
+#CMD ["java", "-jar", "tpAchatProject-1.0.jar"]
+CMD ["java", "-jar", "tpAchatProject-1.0.jar", "--spring.datasource.username=${SPRING_DATASOURCE_USERNAME}", "--spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}", "--spring.datasource.url=${SPRING_DATASOURCE_URL}"]
