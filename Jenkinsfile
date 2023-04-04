@@ -29,14 +29,14 @@ pipeline {
                    // credentialsId:  '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';
                 }
             }    
-/*
+
                 stage('SonarQube check for Angular') {
                     steps {
                             sh 'npm install sonar-scanner --save-dev'
                             sh 'npm run sonar'
                     }
                 }
-*/
+
                 stage('Build Angular image') {
                     steps {
                       //  sh 'chmod 666 /var/run/docker.sock'
@@ -44,7 +44,7 @@ pipeline {
                         sh 'docker build -t esprit-devops-angular:${BUILD_TAG} .'
                     }
                 }
-        /*  
+          
                 stage('Push Angular image to Nexus') {
                 steps {
    
@@ -54,7 +54,7 @@ pipeline {
                 }
             }
        
-      */  
+       
             stage('Push Angular image to Docker Hub') {
                 steps {
            
@@ -97,15 +97,14 @@ pipeline {
             }
      
            
-    /*      
+         
                
             stage("build & SonarQube analysis") {
                     steps {
                         sh  "mvn sonar:sonar -Dsonar.projectKey=tpAchatProject -Dsonar.host.url=http://72.10.0.140:9000 -Dsonar.login=334635ab13b1c886cddc5a0d9ab9673e2514e8ee"
                     }
             }
-             
-  */          
+                       
             stage('Build Spring Boot image') {
                            
                     steps {
@@ -114,7 +113,7 @@ pipeline {
                     }
             }
            
-/*
+
             stage('Push Spring Boot image to Nexus') {
                 steps {
                         sh 'docker tag tp-achat-project:${BUILD_TAG} 72.10.0.140:8082/docker-devops-repo/tp-achat-project:${BUILD_TAG}'
@@ -123,7 +122,7 @@ pipeline {
                 }
             }
        
-*/
+
             stage('Push Spring Boot image to Docker Hub') {
                 steps {
                         sh 'docker tag tp-achat-project:${BUILD_TAG} docker.io/${DOCKER_HUB_USERNAME}/${DOCKER_HUB_SPRING_REPO}:${BUILD_TAG} '
