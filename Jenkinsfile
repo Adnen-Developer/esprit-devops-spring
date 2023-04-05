@@ -30,8 +30,22 @@ pipeline {
                 }
             }    
 
-                stage('SonarQube check for Angular') {
+        stage("Launch SonarQube and Nexus containers") {
+            steps {
+                sh ' sudo docker-compose -f  /home/vagrant/SonarAndNexus/docker-compose.yml start'
+                sh 'echo "date and time BEFORE  sleep() for two minutes" '
+                sh 'date +"%m_%d_%Y_%M:%S"'
+                sleep(time: 2, unit: "MINUTES")
+
+            }
+        }         
+
+
+
+               stage('SonarQube check for Angular') {
                     steps {
+                            sh 'echo "date and time AFTER  sleep() for two minutes" '
+                            sh 'date +"%m_%d_%Y_%M:%S"'
                             sh 'npm install sonar-scanner --save-dev'
                             sh 'npm run sonar'
                     }
@@ -104,7 +118,10 @@ pipeline {
                         sh  "mvn sonar:sonar -Dsonar.projectKey=tpAchatProject -Dsonar.host.url=http://72.10.0.140:9000 -Dsonar.login=334635ab13b1c886cddc5a0d9ab9673e2514e8ee"
                     }
             }
-                       
+
+
+
+
             stage('Build Spring Boot image') {
                            
                     steps {
@@ -131,7 +148,13 @@ pipeline {
                                         sh 'unset BUILD_TAG'
                 }
             }
-         /*  
+   
+           stage("Stop SonarQube and Nexus containers") {
+            steps {
+                sh ' sudo docker-compose -f  /home/vagrant/SonarAndNexus/docker-compose.yml stop'
+                 }
+            }
+           
             stage('create Spring boot, ANgular and Mysql App') {
               steps {
                 withEnv([
@@ -141,23 +164,18 @@ pipeline {
                   "MYSQL_PASSWORD=${env.MYSQL_PASSWORD}"
 
                 ]) {
-                  sh 'docker-compose -f /home/vagrant/dockerComposeDeployment/Docker-Compose-Deployment.yml up -d'
+                  sh 'sudo docker-compose -f /home/vagrant/dockerComposeDeployment/Docker-Compose-Deployment.yml up -d'
                 }
               }
             }    
      
-
           stage('LOGOUT'){
                 steps {
                   sh 'docker logout docker.io'
                   sh "docker logout ${DOCKER_HUB_USERNAME}"
-                  sh 'docker logout 72.10.0.140:8082'    
-
-
-                   
+                  sh 'docker logout 72.10.0.140:8082'                      
                 }
-            }  
-        */
+            }        
          
     }
 }
