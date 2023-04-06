@@ -20,7 +20,7 @@ pipeline {
         }
        
         stages {
-           
+   /*        
                     stage ('GIT Checkout for Angular App') {
                 steps {
                     echo '...Pulling angular app';
@@ -120,16 +120,17 @@ pipeline {
             }
 
 
-
+*/
 
             stage('Build Spring Boot image') {
                            
                     steps {
+                    sh 'declare BUILD_TAG=$(date +%s-%A-%B)' 
                     sh 'docker build -t tp-achat-project:${BUILD_TAG} .'
                              
                     }
             }
-           
+ /*          
 
             stage('Push Spring Boot image to Nexus') {
                 steps {
@@ -139,43 +140,48 @@ pipeline {
                 }
             }
        
-
+*/
             stage('Push Spring Boot image to Docker Hub') {
                 steps {
                         sh 'docker tag tp-achat-project:${BUILD_TAG} docker.io/${DOCKER_HUB_USERNAME}/${DOCKER_HUB_SPRING_REPO}:${BUILD_TAG} '
                         sh 'docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD'
                         sh 'docker push  docker.io/${DOCKER_HUB_USERNAME}/${DOCKER_HUB_SPRING_REPO}:${BUILD_TAG}'
-                                        sh 'unset BUILD_TAG'
+                        
                 }
             }
-   
+   /*
            stage("Stop SonarQube and Nexus containers") {
             steps {
                 sh ' sudo docker-compose -f  /home/vagrant/SonarAndNexus/docker-compose.yml stop'
                  }
             }
-           
+    */       
             stage('create Spring boot, ANgular and Mysql App') {
               steps {
                 withEnv([
-                  "MYSQL_ROOT_PASSWORD=${env.MYSQL_ROOT_PASSWORD}",
-                  "MYSQL_DATABASE=${env.MYSQL_DATABASE}",
-                  "MYSQL_USER=${env.MYSQL_USER}",
-                  "MYSQL_PASSWORD=${env.MYSQL_PASSWORD}"
 
+                    "DOCKER_HUB_USERNAME=${env.DOCKER_HUB_USERNAME}",
+                    "DOCKER_HUB_ANGULAR_REPO=${env.DOCKER_HUB_ANGULAR_REPO}",
+                    "DOCKER_HUB_SPRING_REPO=${env.DOCKER_HUB_SPRING_REPO}",
+                    "MYSQL_ROOT_PASSWORD=${env.MYSQL_ROOT_PASSWORD}",
+                    "MYSQL_PASSWORD=${env.MYSQL_PASSWORD}",
+                    "MYSQL_DATABASE=${env.MYSQL_DATABASE}"
                 ]) {
                   sh 'sudo docker-compose -f /home/vagrant/dockerComposeDeployment/Docker-Compose-Deployment.yml up -d'
+                sh 'unset BUILD_TAG'
                 }
               }
             }    
      
+
           stage('LOGOUT'){
                 steps {
                   sh 'docker logout docker.io'
                   sh "docker logout ${DOCKER_HUB_USERNAME}"
                   sh 'docker logout 72.10.0.140:8082'                      
                 }
-            }        
+            }  
+        
          
     }
 }
