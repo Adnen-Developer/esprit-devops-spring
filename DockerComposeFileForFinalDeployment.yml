@@ -12,19 +12,22 @@ services:
       - mysql_data:/var/lib/mysql
     # Set environment variables for the MySQL container
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: tpachato
-    # MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    # MYSQL_DATABASE: ${MYSQL_DATABASE}
+  #    MYSQL_ROOT_PASSWORD: root
+  #    MYSQL_DATABASE: tpachato
+     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+     MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
     networks:
       - my-network
   # Define the Spring Boot application service
   spring-app:
+    depends_on:
+      - mysqldb
+    restart: on-failure
     # Use the Docker image for the Spring Boot application
-    image: adnendeveloper/spring-boot-esprit-repo:jenkins-adnen-pipeline-175
-    #image: ${DOCKER_HUB_USERNAME}/${DOCKER_HUB_SPRING_REPO}:${BUILD_TAG}
+  #  image: adnendeveloper/spring-boot-esprit-repo:jenkins-adnen-pipeline-13
+    image: ${DOCKER_HUB_USERNAME}/${DOCKER_HUB_SPRING_REPO}:${BUILD_TAG}
     # Set environment variables for the Spring Boot container
     # environment:
     # Expose the port used by the Spring Boot application container
@@ -32,16 +35,22 @@ services:
       - "8089:8089"
     networks:
       - my-network
+      - frontend
+      
   # Define the Angular application service
   angular-app:
+    depends_on:
+      - spring-app
+    restart: on-failure  
     # Use the Docker image for the Angular application
-    image: adnendeveloper/angular-esprit-repo:jenkins-adnen-pipeline-175
-    #image: ${DOCKER_HUB_USERNAME}/${DOCKER_HUB_ANGULAR_REPO}:${BUILD_TAG}
+  #  image: adnendeveloper/angular-esprit-repo:jenkins-adnen-pipeline-28
+    image: ${DOCKER_HUB_USERNAME}/${DOCKER_HUB_ANGULAR_REPO}:${BUILD_TAG}
     # Expose the port used by the Angular application container
     ports:
       - "4200:4200"
     networks:
       - my-network
+      - frontend
 # Define the volume used by the MySQL container
 volumes:
   mysql_data:
@@ -51,3 +60,4 @@ networks:
   my-network:
     external:
       name: my-network
+  frontend:
